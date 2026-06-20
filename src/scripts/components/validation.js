@@ -84,3 +84,14 @@ export const enableValidation = (settings) => {
     setEventListeners(formElement, settings);
   });
 };
+
+
+export const disableSubmitButton = (buttonElement, settings) => {
+  buttonElement.classList.add(settings.inactiveButtonClass);
+  buttonElement.disabled = true;
+};
+
+export const enableSubmitButton = (buttonElement, settings) => {
+  buttonElement.classList.remove(settings.inactiveButtonClass);
+  buttonElement.disabled = false;
+};
