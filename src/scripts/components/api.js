@@ -1,8 +1,8 @@
 // Конфигурация API (замените на свои данные)
 const config = {
-  baseUrl: 'https://mesto.nomoreparties.co/v1/ваш-идентификатор-группы',
+  baseUrl: 'https://mesto.nomoreparties.co/v1/apf-cohort-203',
   headers: {
-    authorization: 'ваш-личный-токен',
+    authorization: 'f5ddf91c-8d2f-4249-9903-aa98486d66d0',
     'Content-Type': 'application/json',
   },
 };
