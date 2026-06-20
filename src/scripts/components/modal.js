@@ -28,7 +28,7 @@ export const setCloseModalWindowEventListeners = (modalWindow) => {
   });
 };
 
-// Новая функция для подтверждения удаления (передаём колбэк)
+// Новая функция для подтверждения удаления 
 export const confirmDeletion = (modalWindow, onConfirm) => {
   const form = modalWindow.querySelector('.popup__form');
   const confirmButton = form.querySelector('.popup__button');

@@ -65,7 +65,7 @@ let allCards = [];
 
 // -------------------- Рендеринг карточек --------------------
 const renderCards = (cards) => {
-  placesWrap.innerHTML = ''; // очищаем
+  placesWrap.innerHTML = '';
   cards.forEach((card) => {
     const cardElement = createCardElement(card, {
       onPreviewPicture: handlePreviewPicture,
@@ -179,7 +179,7 @@ const handleCardFormSubmit = (evt) => {
 
 // -------------------- Статистика (вариант 3) --------------------
 const renderStatistics = () => {
-  // Получаем данные из allCards и профиля
+
   const users = new Set();
   let totalLikes = 0;
   const userLikes = {};
@@ -196,7 +196,7 @@ const renderStatistics = () => {
     });
   });
 
-  // Максимум лайков от одного пользователя
+
   let maxLikes = 0;
   let championId = null;
   for (const [id, count] of Object.entries(userLikes)) {
@@ -205,20 +205,17 @@ const renderStatistics = () => {
       championId = id;
     }
   }
-  // Имя чемпиона (пока не знаем, вытащим из профиля, но у нас нет списка пользователей)
-  // Поэтому просто возьмём из карточек, но проще пока оставить как есть
-  // Можно найти имя из карточки, но проще использовать текущего пользователя, если он чемпион
-  // Но по заданию нужно имя пользователя. У нас есть только текущий пользователь. Будем считать, что чемпион – текущий, если maxLikes соответствует его лайкам.
-  // Но для простоты оставим "Неизвестно" или возьмём из первой карточки.
+  // Имя чемпиона 
+
   let championName = 'Неизвестно';
-  // Попробуем найти владельца с таким id
+  
   for (const card of allCards) {
     if (card.owner._id === championId) {
       championName = card.owner.name;
       break;
     }
   }
-  // Если не нашли, то текущий пользователь
+  
   if (championId === currentUserId) {
     championName = profileTitle.textContent;
   }
@@ -229,9 +226,9 @@ const renderStatistics = () => {
 
   // Заполняем элементы модалки
   const infoContent = infoModalWindow.querySelector('.popup__info');
-  // Очищаем старые данные
+  
   infoContent.innerHTML = '';
-  // Добавляем строки (можно использовать готовые шаблоны, но для простоты создадим элементы)
+  
   const dataItems = [
     { term: 'Всего пользователей', description: users.size },
     { term: 'Всего лайков', description: totalLikes },

@@ -21,8 +21,7 @@ const checkInputValidity = (formElement, inputElement, settings) => {
     hideInputError(formElement, inputElement, settings);
   } else {
     let errorMessage = inputElement.validationMessage;
-    // Если есть data-error-message и ошибка из-за patternMismatch,
-    // используем кастомное сообщение
+    
     if (inputElement.dataset.errorMessage && inputElement.validity.patternMismatch) {
       errorMessage = inputElement.dataset.errorMessage;
     }
@@ -56,7 +55,7 @@ const setEventListeners = (formElement, settings) => {
   const inputList = Array.from(formElement.querySelectorAll(settings.inputSelector));
   const buttonElement = formElement.querySelector(settings.submitButtonSelector);
 
-  // Начальное состояние кнопки (неактивна)
+  // Начальное состояние кнопки 
   toggleButtonState(inputList, buttonElement, settings);
 
   inputList.forEach((inputElement) => {

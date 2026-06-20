@@ -1,4 +1,6 @@
-// Переключение лайка (обновление иконки и счётчика)
+// card.js
+
+// Обновление состояния лайка
 export const updateLikeState = (cardElement, likes, isLiked) => {
   const likeButton = cardElement.querySelector('.card__like-button');
   const likeCount = cardElement.querySelector('.card__like-count');
@@ -27,13 +29,13 @@ export const createCardElement = (
   const likeCount = template.querySelector('.card__like-count');
   const deleteButton = template.querySelector('.card__control-button_type_delete');
 
-  // Заполняем данными
+  // Заполнение данными
   cardImage.src = data.link;
   cardImage.alt = data.name;
   cardTitle.textContent = data.name;
   likeCount.textContent = data.likes.length;
 
-  // Показываем лайк, если пользователь уже лайкнул
+  // Состояние лайка
   const isLiked = data.likes.some((user) => user._id === currentUserId);
   if (isLiked) {
     likeButton.classList.add('card__like-button_is-active');
@@ -44,14 +46,14 @@ export const createCardElement = (
     deleteButton.style.display = 'none';
   }
 
-  // Слушатель лайка
+  // -------- слушатель лайка --------
   likeButton.addEventListener('click', () => {
-    onLikeIcon(cardElement, data._id, likeButton.classList.contains('card__like-button_is-active'));
+    onLikeIcon(template, data._id, likeButton.classList.contains('card__like-button_is-active'));
   });
 
   // Слушатель удаления
   deleteButton.addEventListener('click', () => {
-    onDeleteCard(cardElement, data._id);
+    onDeleteCard(template, data._id);
   });
 
   // Слушатель открытия изображения
