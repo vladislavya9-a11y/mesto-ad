@@ -63,3 +63,8 @@ export const createCardElement = (
 
   return template;
 };
+
+
+export const deleteCard = (cardElement) => {
+  cardElement.remove();
+};

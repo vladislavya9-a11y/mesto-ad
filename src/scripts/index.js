@@ -7,14 +7,15 @@ import {
   deleteCardApi,
   changeLikeCardStatus,
 } from './components/api.js';
-import { createCardElement, updateLikeState } from './components/card.js';
+
 import {
   openModalWindow,
   closeModalWindow,
   setCloseModalWindowEventListeners,
   confirmDeletion,
 } from './components/modal.js';
-import { enableValidation, clearValidation } from './components/validation.js';
+import { enableValidation, clearValidation, disableSubmitButton, enableSubmitButton } from './components/validation.js';
+import { createCardElement, updateLikeState, deleteCard } from './components/card.js';
 
 // -------------------- Настройки валидации --------------------
 const validationSettings = {
@@ -95,16 +96,30 @@ const handleLike = (cardElement, cardId, isLiked) => {
     .catch((err) => console.error('Ошибка при лайке:', err));
 };
 
-// Удаление
+
+// Обработчик удаления
 const handleDelete = (cardElement, cardId) => {
   const confirmDelete = () => {
+    const confirmButton = deleteModalWindow.querySelector(validationSettings.submitButtonSelector);
+    const originalText = confirmButton.textContent;
+    confirmButton.textContent = 'Удаление...';
+    disableSubmitButton(confirmButton, validationSettings); 
+
     deleteCardApi(cardId)
       .then(() => {
-        cardElement.remove();
+        deleteCard(cardElement);
         allCards = allCards.filter((c) => c._id !== cardId);
+        closeModalWindow(deleteModalWindow);
       })
-      .catch((err) => console.error('Ошибка удаления:', err));
+      .catch((err) => {
+        console.error('Ошибка удаления карточки:', err);
+      })
+      .finally(() => {
+        confirmButton.textContent = originalText;
+        enableSubmitButton(confirmButton, validationSettings); 
+      });
   };
+
   confirmDeletion(deleteModalWindow, confirmDelete);
   openModalWindow(deleteModalWindow);
 };
@@ -112,10 +127,10 @@ const handleDelete = (cardElement, cardId) => {
 // Редактирование профиля
 const handleProfileFormSubmit = (evt) => {
   evt.preventDefault();
-  const button = profileForm.querySelector('.popup__button');
+  const button = profileForm.querySelector(validationSettings.submitButtonSelector);
   const originalText = button.textContent;
   button.textContent = 'Сохранение...';
-  button.disabled = true;
+  disableSubmitButton(button, validationSettings); 
 
   updateUserInfo(profileTitleInput.value, profileDescriptionInput.value)
     .then((userData) => {
@@ -126,17 +141,17 @@ const handleProfileFormSubmit = (evt) => {
     .catch((err) => console.error('Ошибка обновления профиля:', err))
     .finally(() => {
       button.textContent = originalText;
-      button.disabled = false;
+      enableSubmitButton(button, validationSettings); 
     });
 };
 
 // Обновление аватара
 const handleAvatarFormSubmit = (evt) => {
   evt.preventDefault();
-  const button = avatarForm.querySelector('.popup__button');
+  const button = avatarForm.querySelector(validationSettings.submitButtonSelector);
   const originalText = button.textContent;
   button.textContent = 'Сохранение...';
-  button.disabled = true;
+  disableSubmitButton(button, validationSettings);
 
   updateAvatar(avatarInput.value)
     .then((userData) => {
@@ -146,17 +161,17 @@ const handleAvatarFormSubmit = (evt) => {
     .catch((err) => console.error('Ошибка обновления аватара:', err))
     .finally(() => {
       button.textContent = originalText;
-      button.disabled = false;
+      enableSubmitButton(button, validationSettings);
     });
 };
 
 // Добавление карточки
 const handleCardFormSubmit = (evt) => {
   evt.preventDefault();
-  const button = cardForm.querySelector('.popup__button');
+  const button = cardForm.querySelector(validationSettings.submitButtonSelector);
   const originalText = button.textContent;
   button.textContent = 'Создание...';
-  button.disabled = true;
+  disableSubmitButton(button, validationSettings);
 
   addCard(cardNameInput.value, cardLinkInput.value)
     .then((newCard) => {
@@ -173,13 +188,13 @@ const handleCardFormSubmit = (evt) => {
     .catch((err) => console.error('Ошибка добавления карточки:', err))
     .finally(() => {
       button.textContent = originalText;
-      button.disabled = false;
+      enableSubmitButton(button, validationSettings);
     });
 };
 
 // -------------------- Статистика (вариант 3) --------------------
 const renderStatistics = () => {
-
+  
   const users = new Set();
   let totalLikes = 0;
   const userLikes = {};
@@ -205,29 +220,33 @@ const renderStatistics = () => {
       championId = id;
     }
   }
-  // Имя чемпиона 
+
 
   let championName = 'Неизвестно';
-  
+
   for (const card of allCards) {
     if (card.owner._id === championId) {
       championName = card.owner.name;
       break;
     }
   }
-  
+
   if (championId === currentUserId) {
     championName = profileTitle.textContent;
   }
 
-  // Топ-3 популярных карточки
+
   const sortedCards = [...allCards].sort((a, b) => b.likes.length - a.likes.length);
   const top3 = sortedCards.slice(0, 3).map((c) => c.name);
 
-  // Заполняем элементы модалки
-  const infoContent = infoModalWindow.querySelector('.popup__info');
   
-  infoContent.innerHTML = '';
+  const infoContent = infoModalWindow.querySelector('.popup__info');
+  infoContent.innerHTML = ''; 
+
+  
+  const defTemplate = document.getElementById('popup-info-definition-template');
+  const userTemplate = document.getElementById('popup-info-user-preview-template');
+
   
   const dataItems = [
     { term: 'Всего пользователей', description: users.size },
@@ -237,33 +256,28 @@ const renderStatistics = () => {
   ];
 
   dataItems.forEach((item) => {
-    const dl = document.createElement('div');
-    dl.classList.add('popup__info-item');
-    const dt = document.createElement('dt');
-    dt.classList.add('popup__info-term');
-    dt.textContent = item.term;
-    const dd = document.createElement('dd');
-    dd.classList.add('popup__info-description');
-    dd.textContent = item.description;
-    dl.append(dt, dd);
-    infoContent.append(dl);
+    const clone = defTemplate.content.cloneNode(true);
+    clone.querySelector('.popup__info-term').textContent = item.term;
+    clone.querySelector('.popup__info-description').textContent = item.description;
+    infoContent.append(clone);
   });
 
-  // Добавляем список популярных карточек
-  const listTitle = document.createElement('h4');
-  listTitle.classList.add('popup__text');
-  listTitle.textContent = 'Популярные карточки:';
-  infoContent.append(listTitle);
+  
+  const title = document.createElement('h4');
+  title.classList.add('popup__text');
+  title.textContent = 'Популярные карточки:';
+  infoContent.append(title);
 
-  const ul = document.createElement('ul');
-  ul.classList.add('popup__list');
+  
+  const list = document.createElement('ul');
+  list.classList.add('popup__list');
   top3.forEach((name) => {
-    const li = document.createElement('li');
-    li.classList.add('popup__list-item');
-    li.textContent = name;
-    ul.append(li);
+    const clone = userTemplate.content.cloneNode(true);
+    clone.querySelector('.popup__list-item').textContent = name;
+    list.append(clone);
   });
-  infoContent.append(ul);
+  infoContent.append(list);
+
 
   openModalWindow(infoModalWindow);
 };

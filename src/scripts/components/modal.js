@@ -31,14 +31,12 @@ export const setCloseModalWindowEventListeners = (modalWindow) => {
 // Новая функция для подтверждения удаления 
 export const confirmDeletion = (modalWindow, onConfirm) => {
   const form = modalWindow.querySelector('.popup__form');
-  const confirmButton = form.querySelector('.popup__button');
-
-  const handleSubmit = (evt) => {
+  
+  const newForm = form.cloneNode(true);
+  form.parentNode.replaceChild(newForm, form);
+  
+  newForm.addEventListener('submit', (evt) => {
     evt.preventDefault();
-    onConfirm();
-    closeModalWindow(modalWindow);
-    form.removeEventListener('submit', handleSubmit);
-  };
-
-  form.addEventListener('submit', handleSubmit);
+    onConfirm(); 
+  });
 };
