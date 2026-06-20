@@ -33,12 +33,14 @@ const hasInvalidInput = (inputList) => {
   return inputList.some((input) => !input.validity.valid);
 };
 
-const disableSubmitButton = (buttonElement, settings) => {
+
+
+export const disableSubmitButton = (buttonElement, settings) => {
   buttonElement.classList.add(settings.inactiveButtonClass);
   buttonElement.disabled = true;
 };
 
-const enableSubmitButton = (buttonElement, settings) => {
+export const enableSubmitButton = (buttonElement, settings) => {
   buttonElement.classList.remove(settings.inactiveButtonClass);
   buttonElement.disabled = false;
 };
@@ -86,12 +88,3 @@ export const enableValidation = (settings) => {
 };
 
 
-export const disableSubmitButton = (buttonElement, settings) => {
-  buttonElement.classList.add(settings.inactiveButtonClass);
-  buttonElement.disabled = true;
-};
-
-export const enableSubmitButton = (buttonElement, settings) => {
-  buttonElement.classList.remove(settings.inactiveButtonClass);
-  buttonElement.disabled = false;
-};
