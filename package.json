@@ -4,7 +4,7 @@
   "description": "Проект Mesto с валидацией и Vite",
   "scripts": {
     "dev": "vite",
-    "build": "vite build"
+    "build": "npx vite build"
   },
   "devDependencies": {
     "vite": "^4.5.0"
