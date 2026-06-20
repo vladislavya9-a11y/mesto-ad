@@ -1,0 +1,43 @@
+@import url('../vendor/normalize.css');
+@import url('../vendor/fonts.css');
+@import url('../blocks/page/page.css');
+@import url('../blocks/header/header.css');
+@import url('../blocks/content/content.css');
+@import url('../blocks/footer/footer.css');
+@import url('../blocks/profile/profile.css');
+@import url('../blocks/places/places.css');
+@import url('../blocks/card/card.css');
+@import url('../blocks/popup/popup.css');
+@import url('../blocks/popup/_is-animated/popup_is-animated.css');
+@import url('../blocks/popup/_is-opened/popup_is-opened.css');
+/*Импортируем на уровень выше*/
+/* Стили для неактивной кнопки */
+.popup_button_disabled {
+  opacity: 0.2;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* Стили для сообщения об ошибке */
+.popup_error {
+  display: block;
+  min-height: 20px;
+  font-size: 12px;
+  color: #ff0000;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.popup_error_visible {
+  opacity: 1;
+}
+
+.popup_input_type_error {
+  border-bottom-color: #ff0000;
+}
+
+.card__like-count {
+  font-size: 13px;
+  text-align: center;
+  margin: 0;
+}
