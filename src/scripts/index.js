@@ -12,7 +12,6 @@ import {
   openModalWindow,
   closeModalWindow,
   setCloseModalWindowEventListeners,
-  confirmDeletion,
 } from './components/modal.js';
 import { enableValidation, clearValidation, disableSubmitButton, enableSubmitButton } from './components/validation.js';
 import { createCardElement, updateLikeState, deleteCard } from './components/card.js';
@@ -97,13 +96,28 @@ const handleLike = (cardElement, cardId, isLiked) => {
 };
 
 
-// Обработчик удаления
+// Обработчик удаления 
 const handleDelete = (cardElement, cardId) => {
-  const confirmDelete = () => {
+  
+  openModalWindow(deleteModalWindow);
+
+  
+  const form = deleteModalWindow.querySelector('.popup__form');
+
+  
+  if (form._submitHandler) {
+    form.removeEventListener('submit', form._submitHandler);
+    delete form._submitHandler;
+  }
+
+  
+  const submitHandler = (evt) => {
+    evt.preventDefault();
+
     const confirmButton = deleteModalWindow.querySelector(validationSettings.submitButtonSelector);
     const originalText = confirmButton.textContent;
     confirmButton.textContent = 'Удаление...';
-    disableSubmitButton(confirmButton, validationSettings); 
+    disableSubmitButton(confirmButton, validationSettings);
 
     deleteCardApi(cardId)
       .then(() => {
@@ -116,12 +130,16 @@ const handleDelete = (cardElement, cardId) => {
       })
       .finally(() => {
         confirmButton.textContent = originalText;
-        enableSubmitButton(confirmButton, validationSettings); 
+        enableSubmitButton(confirmButton, validationSettings);
+    
+        form.removeEventListener('submit', submitHandler);
+        delete form._submitHandler;
       });
   };
 
-  confirmDeletion(deleteModalWindow, confirmDelete);
-  openModalWindow(deleteModalWindow);
+  
+  form._submitHandler = submitHandler;
+  form.addEventListener('submit', submitHandler);
 };
 
 // Редактирование профиля
@@ -263,10 +281,10 @@ const renderStatistics = () => {
   });
 
   
-  const title = document.createElement('h4');
-  title.classList.add('popup__text');
-  title.textContent = 'Популярные карточки:';
-  infoContent.append(title);
+  const titleTemplate = document.getElementById('popup-info-title-template');
+  const titleClone = titleTemplate.content.cloneNode(true);
+  titleClone.querySelector('.popup__text').textContent = 'Популярные карточки:';
+  infoContent.append(titleClone);
 
   
   const list = document.createElement('ul');

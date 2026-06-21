@@ -42,8 +42,9 @@ export const createCardElement = (
   }
 
   // Скрываем кнопку удаления, если не автор
+// Скрываем кнопку удаления, если не автор
   if (data.owner._id !== currentUserId) {
-    deleteButton.style.display = 'none';
+  deleteButton.remove();  
   }
 
   // -------- слушатель лайка --------
