@@ -287,14 +287,19 @@ const renderStatistics = () => {
   infoContent.append(titleClone);
 
   
-  const list = document.createElement('ul');
-  list.classList.add('popup__list');
+  // Получаем шаблон списка
+  const listTemplate = document.getElementById('popup-info-list-template');
+  const listClone = listTemplate.content.cloneNode(true);
+  const list = listClone.querySelector('.popup__list');
+
+
   top3.forEach((name) => {
-    const clone = userTemplate.content.cloneNode(true);
-    clone.querySelector('.popup__list-item').textContent = name;
-    list.append(clone);
+    const itemClone = userTemplate.content.cloneNode(true);
+    itemClone.querySelector('.popup__list-item').textContent = name;
+    list.append(itemClone);
   });
-  infoContent.append(list);
+
+  infoContent.append(listClone);
 
 
   openModalWindow(infoModalWindow);
