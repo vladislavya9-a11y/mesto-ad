@@ -96,19 +96,14 @@ const handleLike = (cardElement, cardId, isLiked) => {
 };
 
 
-// Обработчик удаления 
+
+
 const handleDelete = (cardElement, cardId) => {
   
   openModalWindow(deleteModalWindow);
 
   
   const form = deleteModalWindow.querySelector('.popup__form');
-
-  
-  if (form._submitHandler) {
-    form.removeEventListener('submit', form._submitHandler);
-    delete form._submitHandler;
-  }
 
   
   const submitHandler = (evt) => {
@@ -131,14 +126,13 @@ const handleDelete = (cardElement, cardId) => {
       .finally(() => {
         confirmButton.textContent = originalText;
         enableSubmitButton(confirmButton, validationSettings);
-    
+        
         form.removeEventListener('submit', submitHandler);
-        delete form._submitHandler;
+
       });
   };
 
-  
-  form._submitHandler = submitHandler;
+
   form.addEventListener('submit', submitHandler);
 };
 
