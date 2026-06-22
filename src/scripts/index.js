@@ -21,9 +21,9 @@ const validationSettings = {
   formSelector: '.popup__form',
   inputSelector: '.popup__input',
   submitButtonSelector: '.popup__button',
-  inactiveButtonClass: 'popup_button_disabled',
-  inputErrorClass: 'popup_input_type_error',
-  errorClass: 'popup_error_visible',
+  inactiveButtonClass: 'popup__button_disabled',
+  inputErrorClass: 'popup__input_type_error',
+  errorClass: 'popup__error_visible',
 };
 
 enableValidation(validationSettings);
@@ -57,7 +57,7 @@ const infoModalWindow = document.querySelector('.popup_type_info');
 
 const openProfileFormButton = document.querySelector('.profile__edit-button');
 const openCardFormButton = document.querySelector('.profile__add-button');
-const logo = document.querySelector('.header__logo'); // для статистики
+const logo = document.querySelector('.header__logo'); 
 
 // -------------------- Глобальное состояние --------------------
 let currentUserId = null;
